@@ -1,6 +1,6 @@
 # Host Tool
 
-Host Tool is a chrome extension for quickly changing the host headers on given sites. It's designed to be fast, adhere to material design and fit into your workflow for quickly checking targets while bug bounty hunting/pentesting.
+Host Tool is a Chrome extension for quickly changing host headers. It's designed to fit smoothly into your workflow for quickly checking on targets while bug bounty hunting/pentesting.
 
 <p align="center">
 <img src="https://github.com/rubyroobs/hosttool/blob/master/assets/screenshots/screenshot_1.png" alt="Host Tool in action!" />
