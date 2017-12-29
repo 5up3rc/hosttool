@@ -1,15 +1,53 @@
 <html>
-	<head>
-		<title>hosttool</title>
-		<link rel="stylesheet" type="text/css" href="popup.css">
-		<script src="popup.js"></script>
-	</head>
-	<body>
-		<h1>hosttool</h1>
-		<div id="container">
-			<p id="info">loading...</p>
-			<select id="host_select">
-			</select>
-		</div>
-	</body>
+    <head>
+        <title>Host Tool</title>
+
+        <link type="text/css" rel="stylesheet" href="../../assets/css/materialize.min.css"  media="screen,projection"/>
+        <link type="text/css" rel="stylesheet" href="../../assets/css/fonts.css"  media="screen,projection"/>
+        <link type="text/css" rel="stylesheet" href="../../assets/css/popup.css"  media="screen,projection"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        
+
+        <nav>
+            <div class="nav-wrapper">
+                <span class="brand-logo">Host Tool</a>
+            </div>
+        </nav>
+                
+        <div id="container">
+            <div class="collection host-list" id="host_select">
+            </div>
+            <div class="fixed-action-btn">
+                <a class="btn-floating btn-large waves-effect waves-light red modal-trigger" id="insert_btn" href="#add_custom_modal">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
+            <div class="spacer"></div>
+
+            <div id="add_custom_modal" class="modal">
+                <form id="add_custom_form">
+                    <div class="modal-content">
+                        <div class="row no-bottom-margin">
+                            <div class="input-field col s12">
+                                <input placeholder="admin.example.com" id="hostname" pattern="[a-zA-Z0-9\-\.]*" type="text" class="validate no-bottom-margin">
+                                <label for="hostname">Custom Hostname</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <a href="#" id="add_custom_btn" class="modal-action waves-effect waves-green btn-flat">Add</a>
+                    </div>
+                </form>
+            </div>
+                      
+        </div>
+
+        <script type="text/javascript" src="../../assets/js/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="../../assets/js/jquery.validate.min.js"></script>
+        <script type="text/javascript" src="../../assets/js/additional-methods.min.js"></script>
+        <script type="text/javascript" src="popup.js"></script>
+        <script type="text/javascript" src="../../assets/js/materialize.min.js"></script>
+    </body>
 </html>

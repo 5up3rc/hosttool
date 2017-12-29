@@ -4,7 +4,7 @@ var replacements = {};
  * Monitor changes to the storage and update our replacements map if necessary
  *
  */
-chrome.storage.onChanged.addListener(function(changes, namespace) {
+chrome.storage.onChanged.addListener((changes, namespace) => {
 	for (key in changes) {
 	  	replacements[key] = changes[key].newValue;
 	}
@@ -16,7 +16,7 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
  * (if necessary) replace.
  *
  */
-chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
+chrome.webRequest.onBeforeSendHeaders.addListener((details) => {
 	url = new URL(details.url);
 	if (replacements[url.hostname]) {
 		details.requestHeaders.push({
@@ -32,8 +32,8 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
  * Initialize replacements on load
  *
  */
-chrome.storage.sync.get(null, function(items) {
-    for (var host in items) {
-    	replacements[host] = items[host];
-    }
+chrome.storage.sync.get(null, (items) => {
+	items.forEach((host) => {
+		replacements[host] = items[host];
+	});
 });

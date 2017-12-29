@@ -39,6 +39,15 @@ function getHostnameFromUrl(url) {
 }
 
 /**
+ * Get an ID from a hostname (i.e. swap .s with _s)
+ *
+ * @param {string} host host to swap from
+ */
+function hostToId(host) {
+  return host.replace(/\./g, "_");
+}
+
+/**
  * Gets the saved background color for url.
  *
  * @param {string} host host for which replacement will be retrieved
@@ -68,35 +77,149 @@ function setHostReplacement(host, replacement) {
 }
 
 /**
+ * Add a custom replacement for a given host
+ *
+ * @param {string} host host for which replacement is to be set.
+ * @param {string} replacement the replacement for which to set
+ */
+function addCustomReplacement(host, replacement) {
+  chrome.storage.sync.get("custom#" + host, (items) => {
+    var items = {};
+    var replacements = [];
+    if (items["custom#" + host]) {
+      var replacements = items["custom#" + host];
+    }
+    replacements.push(replacement);
+    items["custom#" + host] = replacements;
+    chrome.storage.sync.set(items);
+  });
+}
+
+/**
+ * Remove a custom replacement for a given host
+ *
+ * @param {string} host host for which replacement is to be removed.
+ * @param {string} replacement the replacement for which to remove
+ */
+function removeCustomReplacement(host, replacement) {
+  chrome.storage.sync.get("custom#" + host, (items) => {
+    var items = {};
+    var replacements = [];
+    if (items["custom#" + host]) {
+      var replacements = items["custom#" + host];
+    }
+    if (replacements.indexOf(replacement) > -1) {
+        array.splice(replacements.indexOf(replacement), 1);
+    }
+    items["custom#" + host] = replacements;
+    chrome.storage.sync.set(items);
+  });
+}
+
+/**
  * Set our listeners and rock'n'roll!
  */
-document.addEventListener('DOMContentLoaded', () => {
-  getCurrentTabUrl((url) => {
-    var host = getHostnameFromUrl(url);
+$(document).ready(() => {
+    getCurrentTabUrl((url) => {
+        var host = getHostnameFromUrl(url);
+        var list = $("#host_select");
 
-    var info = document.getElementById('info');
-    info.innerHTML = "selected host:";
+        list.append(
+            $('<a>')
+            .attr("id", hostToId(host))
+            .attr("href", "#")
+            .addClass("collection-item")
+            .addClass("active")
+            .text(host)
+            .contextmenu(() => {
+                return false;
+            })
+            .click(() => {
+                setHostReplacement(host, host);
+                $(".active").removeClass("active");
+                $("#" + hostToId(host)).addClass("active")
+            })
+        );
 
-    var dropdown = document.getElementById('host_select');
+        defaultOptions.forEach((opt) => {
+            list.append(
+                $('<a>')
+                .attr("id", hostToId(opt))
+                .attr("href", "#")
+                .addClass("collection-item")
+                .text(opt)
+                .contextmenu(() => {
+                  return false;
+                })
+                .click(() => {
+                  setHostReplacement(host, opt);
+                  $(".active").removeClass("active");
+                  $("#" + hostToId(opt)).addClass("active")
+                })
+            );
+        });
 
-    var option = document.createElement('option');
-    option.text = option.value = host;
-    dropdown.add(option, 0);
+        chrome.storage.sync.get("custom#" + host, (items) => {
+            var customs = [];
+            if (items["custom#" + host]) {
+              var customs = items["custom#" + host];
+            }
+            customs.forEach((opt) => {
+                list.append(
+                    $('<a>')
+                    .attr("id", hostToId(opt))
+                    .attr("href", "#")
+                    .addClass("collection-item")
+                    .text(opt)
+                    .contextmenu(() => {
+                        $("#" + hostToId(opt))
+                        .addClass("delete-host red")
+                        .text("click to delete?");
+                        $(document).click((e) => {
+                            if (e.target.id === hostToId(opt)) {
+                                removeCustomReplacement(host, opt);
+                                if ($("#" + hostToId(opt)).hasClass("active")) {
+                                    setHostReplacement(host, host);
+                                    $("#" + hostToId(host)).addClass("active")
+                                }
+                                $("#" + hostToId(opt)).remove();
+                            } else {
+                                $("#" + hostToId(opt))
+                                .removeClass("delete-host red")
+                                .text(opt);
+                                $(document).off("click");
+                            }
+                        });
+                        return false;
+                    })
+                    .click(() => {
+                        setHostReplacement(host, opt);
+                        $(".active").removeClass("active");
+                        $("#" + hostToId(opt)).addClass("active")
+                    })
+                );
+            });
+        });
 
-    defaultOptions.forEach(function(opt) {
-      var option = document.createElement('option');
-      option.text = option.value = opt;
-      dropdown.add(option, 1);
+        getHostReplacement(host, (replacement) => {
+            if (replacement) {
+                $("#" + hostToId(host)).removeClass("active")
+                $("#" + hostToId(replacement)).addClass("active");
+            }
+        });
+
+        $("#add_custom_form").submit(() => {
+            var toAdd = $("#hostname").val();
+            $("#hostname").val("");
+            addCustomReplacement(host, toAdd);
+            $('.modal').modal('close');
+        });
     });
 
-    getHostReplacement(host, (replacement) => {
-      if (replacement) {
-        dropdown.value = replacement;
-      }
+    $("#add_custom_btn").click(() => {
+        if ($("#add_custom_form").valid()) {
+            $("#add_custom_form").submit();
+        }
     });
-
-    dropdown.addEventListener('change', () => {
-      setHostReplacement(host, dropdown.value);
-    });
-  });
+    $('.modal').modal();
 });

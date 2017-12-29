@@ -1,0 +1,28 @@
+#container {
+  min-width: 300px;
+  margin: 0 15px;
+}
+
+.host-list {
+	text-align: center;
+}
+
+#insert_btn {
+	text-align: right;
+}
+
+.spacer {
+	padding-top: 75px;
+}
+
+.no-bottom-margin {
+	margin-bottom: 0px !important;
+}
+
+.delete-host {
+	color: #eafaf9 !important;
+}
+
+#hostname-error {
+	display: none !important;
+}
