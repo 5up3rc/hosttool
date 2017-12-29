@@ -16,4 +16,4 @@ Usage is pretty straightforward - use the extension when on the host you want to
 Contributions are more than welcome! Feel free to make a pull request and, if accepted, it will be merged in the next update.
 
 ## License
-hosttool is released under the [MIT License](https://opensource.org/licenses/MIT).
+Host Tool is released under the [MIT License](https://opensource.org/licenses/MIT).
