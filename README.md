@@ -7,7 +7,7 @@ Host Tool is a Chrome extension for quickly changing host headers. It's designed
 </p>
 
 ## Installation
-TODO: Installation notes
+Install the latest version from the [Chrome Web Store](https://chrome.google.com/webstore/detail/naheccckleemcckamjkhdihboannlgll/).
 
 ## Usage
 Usage is pretty straightforward - use the extension when on the host you want to change over. Add custom replacements for hosts using the plus icon, and remove them by right clicking and clicking again to confirm.
