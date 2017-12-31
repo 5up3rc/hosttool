@@ -44,7 +44,7 @@ function getHostnameFromUrl(url) {
  * @param {string} host host to swap from
  */
 function hostToId(host) {
-  return host.replace(/\./g, "_");
+  return host.replace(/\./g, "_").replace(/:/g, "___");
 }
 
 /**
@@ -84,7 +84,6 @@ function setHostReplacement(host, replacement) {
  */
 function addCustomReplacement(host, replacement) {
   chrome.storage.sync.get("custom#" + host, (items) => {
-    var items = {};
     var replacements = [];
     if (items["custom#" + host]) {
       var replacements = items["custom#" + host];
@@ -103,13 +102,12 @@ function addCustomReplacement(host, replacement) {
  */
 function removeCustomReplacement(host, replacement) {
   chrome.storage.sync.get("custom#" + host, (items) => {
-    var items = {};
     var replacements = [];
     if (items["custom#" + host]) {
       var replacements = items["custom#" + host];
     }
     if (replacements.indexOf(replacement) > -1) {
-        array.splice(replacements.indexOf(replacement), 1);
+        replacements.splice(replacements.indexOf(replacement), 1);
     }
     items["custom#" + host] = replacements;
     chrome.storage.sync.set(items);
@@ -125,37 +123,37 @@ $(document).ready(() => {
         var list = $("#host_select");
 
         list.append(
-            $('<a>')
-            .attr("id", hostToId(host))
-            .attr("href", "#")
+            $("<li>")
             .addClass("collection-item")
             .addClass("active")
-            .text(host)
-            .contextmenu(() => {
-                return false;
-            })
+            .attr("id", hostToId(host))
             .click(() => {
                 setHostReplacement(host, host);
                 $(".active").removeClass("active");
                 $("#" + hostToId(host)).addClass("active")
             })
+            .append(
+                $("<div>")
+                .text(host)
+                    
+            )
         );
 
         defaultOptions.forEach((opt) => {
             list.append(
-                $('<a>')
-                .attr("id", hostToId(opt))
-                .attr("href", "#")
+                $("<li>")
                 .addClass("collection-item")
-                .text(opt)
-                .contextmenu(() => {
-                  return false;
-                })
+                .attr("id", hostToId(opt))
                 .click(() => {
-                  setHostReplacement(host, opt);
-                  $(".active").removeClass("active");
-                  $("#" + hostToId(opt)).addClass("active")
+                    setHostReplacement(host, opt);
+                    $(".active").removeClass("active");
+                    $("#" + hostToId(opt)).addClass("active")
                 })
+                .append(
+                    $("<div>")
+                    .text(opt)
+                        
+                )
             );
         });
 
@@ -166,37 +164,33 @@ $(document).ready(() => {
             }
             customs.forEach((opt) => {
                 list.append(
-                    $('<a>')
-                    .attr("id", hostToId(opt))
-                    .attr("href", "#")
+                    $("<li>")
                     .addClass("collection-item")
+                    .attr("id", hostToId(opt))
+                    .click(() => {
+                        setHostReplacement(host, opt);
+                        $(".active").removeClass("active");
+                        $("#" + hostToId(opt)).addClass("active")
+                    })
                     .text(opt)
-                    .contextmenu(() => {
-                        $("#" + hostToId(opt))
-                        .addClass("delete-host red")
-                        .text("click to delete?");
-                        $(document).click((e) => {
-                            if (e.target.id === hostToId(opt)) {
+                    .append(
+                            $('<a>')
+                            .attr("href", "#")
+                            .addClass("secondary-content")
+                            .click(() => {
                                 removeCustomReplacement(host, opt);
                                 if ($("#" + hostToId(opt)).hasClass("active")) {
                                     setHostReplacement(host, host);
                                     $("#" + hostToId(host)).addClass("active")
                                 }
                                 $("#" + hostToId(opt)).remove();
-                            } else {
-                                $("#" + hostToId(opt))
-                                .removeClass("delete-host red")
-                                .text(opt);
-                                $(document).off("click");
-                            }
-                        });
-                        return false;
-                    })
-                    .click(() => {
-                        setHostReplacement(host, opt);
-                        $(".active").removeClass("active");
-                        $("#" + hostToId(opt)).addClass("active")
-                    })
+                            })
+                            .append(
+                                $("<i>")
+                                .addClass("material-icons")
+                                .text("clear")
+                            )
+                    )
                 );
             });
         });
@@ -212,6 +206,35 @@ $(document).ready(() => {
             var toAdd = $("#hostname").val();
             $("#hostname").val("");
             addCustomReplacement(host, toAdd);
+            list.append(
+                $("<li>")
+                .addClass("collection-item")
+                .attr("id", hostToId(toAdd))
+                .click(() => {
+                    setHostReplacement(host, toAdd);
+                    $(".active").removeClass("active");
+                    $("#" + hostToId(toAdd)).addClass("active")
+                })
+                .text(toAdd)
+                .append(
+                        $('<a>')
+                        .attr("href", "#")
+                        .addClass("secondary-content")
+                        .click(() => {
+                            removeCustomReplacement(host, toAdd);
+                            if ($("#" + hostToId(toAdd)).hasClass("active")) {
+                                setHostReplacement(host, host);
+                                $("#" + hostToId(host)).addClass("active")
+                            }
+                            $("#" + hostToId(toAdd)).remove();
+                        })
+                        .append(
+                            $("<i>")
+                            .addClass("material-icons")
+                            .text("clear")
+                        )
+                )
+            );
             $('.modal').modal('close');
         });
     });
@@ -222,4 +245,8 @@ $(document).ready(() => {
         }
     });
     $('.modal').modal();
+
+    //$(document).contextmenu(() => {
+    //    return false;
+    //});
 });

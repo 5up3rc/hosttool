@@ -1,10 +1,16 @@
+html {
+	max-height: 100%;
+	object-fit: contain;
+}
+
+body {
+	font-family: Roboto;
+	font-size: 100%;
+}
+
 #container {
   min-width: 300px;
   margin: 0 15px;
-}
-
-.host-list {
-	text-align: center;
 }
 
 #insert_btn {
@@ -17,10 +23,6 @@
 
 .no-bottom-margin {
 	margin-bottom: 0px !important;
-}
-
-.delete-host {
-	color: #eafaf9 !important;
 }
 
 #hostname-error {

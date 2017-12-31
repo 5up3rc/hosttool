@@ -1,4 +1,4 @@
-<html>
+<!DOCTYPE html>
     <head>
         <title>Host Tool</title>
 
@@ -17,7 +17,7 @@
         </nav>
                 
         <div id="container">
-            <div class="collection host-list" id="host_select">
+            <ul class="collection" id="host_select">
             </div>
             <div class="fixed-action-btn">
                 <a class="btn-floating btn-large waves-effect waves-light red modal-trigger" id="insert_btn" href="#add_custom_modal">
@@ -27,11 +27,11 @@
             <div class="spacer"></div>
 
             <div id="add_custom_modal" class="modal">
-                <form id="add_custom_form">
+                <form id="add_custom_form" autocomplete="off">
                     <div class="modal-content">
                         <div class="row no-bottom-margin">
                             <div class="input-field col s12">
-                                <input placeholder="admin.example.com" id="hostname" pattern="[a-zA-Z0-9\-\.]*" type="text" class="validate no-bottom-margin">
+                                <input placeholder="admin.example.com" id="hostname" pattern="[a-zA-Z0-9\-\.:]*" type="text" class="validate no-bottom-margin">
                                 <label for="hostname">Custom Hostname</label>
                             </div>
                         </div>
