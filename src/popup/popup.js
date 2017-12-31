@@ -246,7 +246,7 @@ $(document).ready(() => {
     });
     $('.modal').modal();
 
-    //$(document).contextmenu(() => {
-    //    return false;
-    //});
+    $(document).contextmenu(() => {
+       return false;
+    });
 });
